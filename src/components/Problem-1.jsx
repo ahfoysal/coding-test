@@ -91,13 +91,17 @@ const Problem1 = () => {
             <tbody>
               {tasks
                 .sort((a, b) => {
-                  if (a.status === "active" && b.status !== "active") return -1;
+                  const statusA = a.status.toLowerCase();
+                  const statusB = b.status.toLowerCase();
+
+                  if (statusA === "active" && statusB !== "active") return -1;
                   if (
-                    a.status === "completed" &&
-                    b.status !== "active" &&
-                    b.status !== "completed"
+                    statusA === "completed" &&
+                    statusB !== "active" &&
+                    statusB !== "completed"
                   )
                     return -1;
+
                   return 0;
                 })
                 .filter(
