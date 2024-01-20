@@ -11,6 +11,9 @@ const Problem1 = () => {
     e.preventDefault();
     const newName = e.target.name.value;
     const newStatus = e.target.status.value;
+    if (newName || newStatus) {
+      return alert("Name and Status is required.");
+    }
     setTasks([...tasks, { name: newName, status: newStatus }]);
     e.target.reset();
   };
