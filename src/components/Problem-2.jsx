@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ContactModal from "./ContactModal";
@@ -16,10 +16,19 @@ const Problem2 = () => {
     singleData: {},
   });
   const [show, setShow] = useState(false);
+  const searchTimeoutRef = useRef();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleDetailsModalClose = () => setShowDeatilsModal(false);
   const handleDetailsModalShow = () => setShowDeatilsModal(true);
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // handle modal
   const handleModal = (val) => {
@@ -57,10 +66,10 @@ const Problem2 = () => {
   };
 
   // handle search contacts api
-  const handleSearchContacts = async (e, title) => {
+  const handleSearchContacts = async (search, title) => {
     try {
       const payload = {
-        search: e.target.value,
+        search,
       };
 
       let requstUrl =
@@ -78,28 +87,17 @@ const Problem2 = () => {
     }
   };
 
-  // debounce function call
-  const debouncedSearchContacts = debounce(handleSearchContacts, 700);
-
   // handle search input
   const handleSerachChnage = (e, title) => {
-    if (e.key === "Enter" || (e.keyCode === 13 && e.target.value.length > 0)) {
-      handleSearchContacts(e, title);
-    } else {
-      debouncedSearchContacts(e, title);
+    const search = e.target.value;
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
-  };
-  // helper function for debounce
-  function debounce(func, delay) {
-    let timeoutId;
-    return function (...args) {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
-    };
+
+    searchTimeoutRef.current = setTimeout(() => {
+      handleSearchContacts(search, title);
+    }, 700);
   }
 
   return (
