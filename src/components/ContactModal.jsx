@@ -65,7 +65,7 @@ const ContactModal = ({
               <input
                 className="searchBox border-0 outlined-none"
                 type="text"
-                onKeyDown={(e) => handleSerachChnage(e, modalData.title)}
+                onChange={(e) => handleSerachChnage(e, modalData.title)}
                 placeholder="Search"
                 aria-label="Search"
               />
